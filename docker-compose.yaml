@@ -1,0 +1,37 @@
+version: '3.6'
+
+services:
+    postgres:
+        image: postgres
+        environment:
+          POSTGRES_DB: keycloak
+          POSTGRES_USER: keycloak
+          POSTGRES_PASSWORD: abcdef123456
+        ports:
+          - 5432:5432
+
+    kcdemo:
+        # image: quay.io/keycloak/keycloak:15.0.2
+        image: jboss/keycloak
+        container_name: kcloak 
+        restart: on-failure:10
+        environment:
+            DB_VENDOR: POSTGRES
+            DB_ADDR: postgres
+            DB_DATABASE: keycloak
+            DB_USER: keycloak
+            DB_SCHEMA: public
+            DB_PASSWORD: abcdef123456
+            KEYCLOAK_USER: admin
+            KEYCLOAK_PASSWORD: Pa55w0rd
+        ports:
+            - "8080:8080"
+        depends_on: 
+            - postgresql
+    
+#    kcsetup:
+#        image: alpine:latest
+#        container_name: kcsetup
+#        restart: "no"
+#        depends_on: 
+#           - keycloak
